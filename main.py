@@ -6,15 +6,15 @@ from flask_jwt import JWT, jwt_required, current_identity
 from sqlalchemy.exc import IntegrityError
 from datetime import timedelta 
 
-from models import db, Logs #add application models
+from models import db, Logs, User #add application models
 
 ''' Begin boilerplate code '''
 
 ''' Begin Flask Login Functions '''
-# login_manager = LoginManager()
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return User.query.get(user_id)
+login_manager = LoginManager()
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
 
 ''' End Flask Login Functions '''
 
@@ -25,7 +25,7 @@ def create_app():
   app.config['SECRET_KEY'] = "MYSECRET"
 #   app.config['JWT_EXPIRATION_DELTA'] = timedelta(days = 7) # uncomment if using flsk jwt
   CORS(app)
-#   login_manager.init_app(app) # uncomment if using flask login
+  login_manager.init_app(app) # uncomment if using flask login
   db.init_app(app)
   return app
 
@@ -48,11 +48,24 @@ app.app_context().push()
 
 @app.route('/')
 def index():
-  return render_template('app.html')
+  return "render_template('app.html')"
 
 @app.route('/app')
 def client_app():
   return app.send_static_file('app.html')
 
+@app.route("/login",  methods=(['POST']))
+def login():
+    if request.method == 'GET':
+		return render_template('index.html')
+        
+    elif request.method == 'POST':
+        userInfo = request.form.to_dict()
+        user = userInfo['user']
+		pass = userInfo['pass']
+        currUser = User.query.filter_by(username=user).first()
+        if currUser and currUser.check_password(pass):
+            return render_template('Test.html'), 200
+            
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8080, debug=True)
