@@ -1,11 +1,17 @@
 {% extends "layout.html" %}
-{% block title %}App{% endblock %}
-{% block page %}App{% endblock %}
+{% block title %}Discover{% endblock %}
+{% block page %} Welcome {{ current_user.username }} {% endblock %}
 
 {{ super() }}
 
 {% block content %}
 
-    <div action="/discover" method="GET"> </div>
+    {% for post in allPosts %}
+
+        <p>Post ID: {{post.id}}</p>
+        <p>User ID: {{post.userid}}</p>
+        <p>Text: {{post.text}}</p>
+
+    {% endfor %}
 
 {% endblock %}

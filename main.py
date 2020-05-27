@@ -52,7 +52,8 @@ def index():
 
 @app.route('/app')
 def client_app():
-  return app.send_static_file('app.html')
+    asgs = Post.query.all()
+    return render_template('app.html', allPosts=asgs)
 
 @app.route("/login",  methods=(['GET', 'POST']))
 def login():
@@ -65,15 +66,10 @@ def login():
         password = userInfo["password"]
         currUser = User.query.filter_by(username=username).first()
         if currUser and currUser.check_password(password):
-            return render_template('app.html'), 200
+            login_user(currUser)
+            return redirect('/app')
         if currUser is None:
             return "Invalid login", 401
-
-@app.route("/discover",  methods=(['GET']))
-def displayPost():
-    testPost = Post.query.filter_by(id="1").first()
-    trial = Post.toDict(testPost)
-    return trial
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8080, debug=True)
