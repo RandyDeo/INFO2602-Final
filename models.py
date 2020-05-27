@@ -20,10 +20,10 @@ class Logs(db.Model):
         }
 
 class User(db.Model, UserMixin):
-    id = db.Column(db.integer, primary_key=True)
-    username = db.Column(db.string, nullable=False)
-    email = db.Column(db.string, nullable=False)
-    password = db.Column(db.string, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False)
+    password = db.Column(db.String, nullable=False)
 
     def toDict(self):
         return{

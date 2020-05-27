@@ -1,12 +1,12 @@
 import json
 from flask_cors import CORS
-from flask_login import LoginManager, current_user, login_user, login_required
+from flask_login import LoginManager, current_user, login_user, login_required, UserMixin
 from flask import Flask, request, render_template, redirect, flash, url_for
 from flask_jwt import JWT, jwt_required, current_identity
 from sqlalchemy.exc import IntegrityError
 from datetime import timedelta 
 
-from models import db, Logs, User #add application models
+from models import db, User #add application models
 
 ''' Begin boilerplate code '''
 
@@ -54,18 +54,20 @@ def index():
 def client_app():
   return app.send_static_file('app.html')
 
-@app.route("/login",  methods=(['POST']))
+@app.route("/login",  methods=(['GET', 'POST']))
 def login():
     if request.method == 'GET':
-		return render_template('index.html')
+        return render_template('index.html')
         
     elif request.method == 'POST':
         userInfo = request.form.to_dict()
-        user = userInfo['user']
-		pass = userInfo['pass']
-        currUser = User.query.filter_by(username=user).first()
-        if currUser and currUser.check_password(pass):
+        username = userInfo["user"]
+        password = userInfo["password"]
+        currUser = User.query.filter_by(username=username).first()
+        if currUser and currUser.check_password(password):
             return render_template('Test.html'), 200
+        if currUser is None:
+            return "Invalid login", 401
             
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8080, debug=True)
