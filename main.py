@@ -6,7 +6,7 @@ from flask_jwt import JWT, jwt_required, current_identity
 from sqlalchemy.exc import IntegrityError
 from datetime import timedelta 
 
-from models import db, User #add application models
+from models import db, User, Post #add application models
 
 ''' Begin boilerplate code '''
 
@@ -48,7 +48,7 @@ app.app_context().push()
 
 @app.route('/')
 def index():
-  return "render_template('app.html')"
+  return render_template('index.html')
 
 @app.route('/app')
 def client_app():
@@ -65,9 +65,15 @@ def login():
         password = userInfo["password"]
         currUser = User.query.filter_by(username=username).first()
         if currUser and currUser.check_password(password):
-            return render_template('Test.html'), 200
+            return render_template('app.html'), 200
         if currUser is None:
             return "Invalid login", 401
-            
+
+@app.route("/discover",  methods=(['GET']))
+def displayPost():
+    testPost = Post.query.filter_by(id="1").first()
+    trial = Post.toDict(testPost)
+    return trial
+
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8080, debug=True)
