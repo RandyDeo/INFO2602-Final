@@ -51,11 +51,24 @@ def index():
   return render_template('index.html')
 
 @app.route('/app')
+@login_required
 def client_app():
     asgs = Post.query.all()
-    return render_template('app.html', allPosts=asgs)
+    users = User.query.all()
+    return render_template('app.html', allPosts=asgs, owner=users)
 
-@app.route("/login",  methods=(['GET', 'POST']))
+@app.route('/app', methods=(["POST"]))
+@login_required
+def submitPost():
+    if request.method == "POST":
+        postData=request.form.to_dict()
+        newPost = Post(userid=current_user.id, text=postData["textBox"])
+        db.session.add(newPost)
+        db.session.commit()
+
+    return redirect('/app')
+
+@app.route("/login", methods=(['GET', 'POST']))
 def login():
     if request.method == 'GET':
         return render_template('index.html')

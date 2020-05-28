@@ -14,8 +14,4 @@ db.session.add(alice)
 
 db.session.commit()
 
-post = Post(id="1",userid="1", text="This is the First Post")
-db.session.add(post)
-db.session.commit()
-
 print('database initialized!')

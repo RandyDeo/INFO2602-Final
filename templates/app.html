@@ -6,6 +6,13 @@
 
 {% block content %}
 
+    <form action="/app" method="POST">
+
+			<input type="text" name="textBox" placeholder="Enter Post Here">
+			<button>Add Post</button>
+
+    </form>
+
     {% for post in allPosts %}
 
         <p>Post ID: {{post.id}}</p>
