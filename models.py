@@ -38,18 +38,12 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
-'''
-class UserReact(db.Model):
-    userid = db.Column("userid", db.Integer, primary_key=True)
-    postid = db.Column(db.Integer, db.ForeignKey("Post.id"), nullable=False)
-    react = db.Column(db.String("like", "dislike"), nullable=False)
-'''
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     userid = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
     text = db.Column(db.String(128), nullable=False)
-    '''reacts = db.relationship("UserReact", backref='post')'''
+    #reacts = db.relationship("UserReact", backref='post')
 
     def toDict(self):
         return{
@@ -57,3 +51,14 @@ class Post(db.Model):
             "User ID ": self.userid,
             "Text ": self.text
         }
+
+    def getTotalLikes(self):
+        return
+
+    def getTotalDislikes(self):
+        return
+
+class UserReact(db.Model):
+    userid = db.Column("userid", db.Integer, primary_key=True)
+    postid = db.Column(db.Integer, db.ForeignKey(Post.id), nullable=False)
+    react = db.Column(db.Boolean, nullable=False)
