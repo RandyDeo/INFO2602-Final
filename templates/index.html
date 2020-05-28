@@ -5,7 +5,23 @@
 {{ super() }}
 
 {% block content %}
-	<div style="padding-top: 5%; text-align: center;">
+
+		{% with messages = get_flashed_messages() %}
+    	{% if messages %}
+		<div style="padding:5px;">
+        <div style="max-width: 20%; margin: auto; text-align: center;border: 2px solid red; ">
+            <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+		</div>
+
+    	{% endif %}
+    	{% endwith %}
+
+	<div style="padding-top: 5px; text-align: center;">
     <div style="border: 5px solid Teal; max-width: 25%; margin: auto; padding: 10px;">
         <form action="/login" method="POST">
     

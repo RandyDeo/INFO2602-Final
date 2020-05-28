@@ -62,23 +62,48 @@ def client_app():
 def submitPost():
     if request.method == "POST":
         postData=request.form.to_dict()
+
+        if postData["textBox"] == "":
+            flash("Please enter message to post!")
+            return redirect('/app')
+
         newPost = Post(userid=current_user.id, text=postData["textBox"])
         db.session.add(newPost)
         db.session.commit()
 
     return redirect('/app')
 
-@app.route("/app", methods=(["DELETE"]))
+@app.route("/app/<id>", methods=(["GET"])) #This was referenced from Extra Lab
 @login_required
-def deletePost():
-    if request.method == "DELETE":
-        post = Post.query.filter(id='1').one()
-        db.session.delete(post)
-        db.session.commit()
-
+def deletePost(id):
+    currPost = Post.query.filter_by(userid=current_user.id, id=id).first()
+    if currPost == None:
+        flash ("Invalid ID or You did not Post this!")
+        return redirect('/app')
+    db.session.delete(currPost)
+    db.session.commit()
     return redirect('/app')
 
-@app.route("/login", methods=(['GET', 'POST']))
+''' LIKE AND DISLIKE ROUTES DON'T WORK
+
+@app.route("/like/<id>", methods=(["GET"]))
+@login_required
+def likePost(id):
+    addLike = UserReact(userid=current_user.id, postid=id, react=true)
+    db.session.add(addLike)
+    db.session.commit()
+    return redirect('/app')
+    
+@app.route("/dislike/<id>", methods=(["GET"]))
+@login_required
+def likePost(id):
+    addLike = UserReact(userid=current_user.id, postid=id, react=faLse)
+    db.session.add(addLike)
+    db.session.commit()
+    return redirect('/app')
+'''
+
+@app.route("/login", methods=(['GET', 'POST'])) #This was referenced from my group Project and Lab 5
 def login():
     if request.method == 'GET':
         return render_template('index.html')
@@ -92,7 +117,14 @@ def login():
             login_user(currUser)
             return redirect('/app')
         if currUser is None:
-            return "Invalid login", 401
+            flash("Invalid Username or Password.")
+            return redirect("/")
+
+@app.route("/logout", methods=(['GET']))
+@login_required
+def logout():
+    logout
+    return redirect("/")
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8080, debug=True)

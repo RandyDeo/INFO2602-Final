@@ -5,8 +5,27 @@
 {{ super() }}
 
 {% block content %}
+
     <div style="padding: 5px; text-align: center;">
-    <div style="border: 5px solid Teal; max-width: 50%; margin: auto; padding: 10px;">
+    <div style="border: 2px solid Teal; max-width: 7%; margin: auto;">
+    <a href="/logout">LOGOUT</a>
+    </div>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div style="max-width: 20%; margin: auto; text-align: center; border: 2px solid red;">
+            <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    <div style="padding: 5px; text-align: center;">
+    <div style="border: 2px solid Teal; max-width: 50%; margin: auto; padding: 10px;">
     <form action="/app" method="POST">
 
         <input type="text" name="textBox" placeholder="Enter Post Here">
@@ -16,17 +35,28 @@
     </div>
     </div>
 
-    {% for post in allPosts %}
+    {% for post in allPosts|reverse %}
 
     <div style="padding: 5px;">
-    <div style="border: 5px solid powderblue; max-width: 50%; margin: auto; padding: 5px;">
-    <form action="/app" method="DELETE">
-        <p>Post ID: {{post.id}}</p>
-        <p>User ID: {{post.userid}}</p>
-        <p>Text: {{post.text}}</p>
+    <div style="border: 2px solid powderblue; max-width: 50%; margin: auto; padding: 10px;">
 
-        <button>DELETE</button>
-    </form>
+        {% for user in owner %}
+        {% if post.userid == user.id %}
+
+        <p>User: {{user.username}}</p>
+
+        {% endif %}
+        {% endfor %}
+
+        <p style="font-size:120%;">{{post.text}}</p>
+
+            <button>LIKE</button>
+            <button>DISLIKE</button>
+
+        <div style="float: right; border: 2px solid teal; max-width: 15%; padding:1px;">
+            <a href="/app/{{post.id}}">DELETE</a>
+        </div>
+
     </div>
     </div>
     {% endfor %}
