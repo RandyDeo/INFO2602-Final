@@ -5,7 +5,8 @@
 {{ super() }}
 
 {% block content %}
-
+	<div style="padding-top: 5%; text-align: center;">
+    <div style="border: 5px solid Teal; max-width: 25%; margin: auto; padding: 10px;">
         <form action="/login" method="POST">
     
 			<input type="text" name="user" placeholder="Username">
@@ -13,5 +14,6 @@
 			<button>Login</button>
 
 		</form>
-
+	</div>
+	</div>
 {% endblock %}

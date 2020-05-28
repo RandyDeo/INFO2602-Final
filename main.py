@@ -72,8 +72,8 @@ def submitPost():
 @login_required
 def deletePost():
     if request.method == "DELETE":
-        selectedPost = Post.query.filter_by(id="1").first()
-        db.session.remove(selectedPost)
+        post = Post.query.filter(id='1').one()
+        db.session.delete(post)
         db.session.commit()
 
     return redirect('/app')
