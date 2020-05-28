@@ -68,6 +68,16 @@ def submitPost():
 
     return redirect('/app')
 
+@app.route("/app", methods=(["DELETE"]))
+@login_required
+def deletePost():
+    if request.method == "DELETE":
+        selectedPost = Post.query.filter_by(id="1").first()
+        db.session.remove(selectedPost)
+        db.session.commit()
+
+    return redirect('/app')
+
 @app.route("/login", methods=(['GET', 'POST']))
 def login():
     if request.method == 'GET':
